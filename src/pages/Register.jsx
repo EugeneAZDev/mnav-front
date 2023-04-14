@@ -25,17 +25,21 @@ const Register = () => {
       return
     }
     if (isValidEmail(email)) {
-      const users = await api.user.find('email', email)
-      if (users.length > 0) {
-        setErrorText('A user with this email already exists')
-      } else {
-        const user = (await api.user.create({ email }))[0]
-        // localhost:3000/reset/4
-        const url = `localhost:3000/reset/${user.id}`
-        console.log(url)
-        // TODO Implement functions below:
-        // 3. Send email
-        setIsDone(true)
+      try {
+        const users = await api.user.find(email)      
+        if (users.length > 0) {
+          setErrorText('A user with this email already exists')
+        } else {
+          const user = (await api.user.create({ email }))[0]
+          // localhost:3000/reset/4
+          const url = `localhost:3000/reset/${user.id}`
+          console.log(url)
+          // TODO Implement functions below:
+          // 3. Send email
+          setIsDone(true)
+        }
+      } catch (error) {
+        setErrorText(error.message)
       }
     } else {
       setErrorText('Invalid Email Address')

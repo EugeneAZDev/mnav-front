@@ -1,9 +1,6 @@
-// api/index.js
-
 const transport = {}
 
 transport.http = (url) => (structure) => {
-  console.log('[static.client.http]');
   const api = {};
   const services = Object.keys(structure);
   for (const name of services) {
@@ -13,25 +10,25 @@ transport.http = (url) => (structure) => {
     for (const method of methods) {
       api[name][method] = (...args) =>
         new Promise((resolve, reject) => {
-          console.log(`${url}/api/${name}/${method}`);
-          console.log(`args = ${JSON.stringify({ args })}`);
+          console.log();
           fetch(`${url}/api/${name}/${method}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ args }),
           }).then((res) => {
             if (res.status === 200) resolve(res.json());
-            else reject(new Error(`Status Code: ${res.status}`));
+            else res.text().then((message) => {
+              reject(new Error(`${res.status}. ${message}`));
+            });
           });
         });
     }
   }
+  
   return Promise.resolve(api);
 };
 
 transport.ws = (url) => (structure) => {
-  // console.log('structure');
-  // console.log(structure);
   const socket = new WebSocket(url);
   const api = {};
   const services = Object.keys(structure);
@@ -62,18 +59,18 @@ const scaffold = (url) => {
 };
 
 export default async function apiMethods() {  
-  const result = await scaffold('ws://localhost:8001')({
+  const result = await scaffold('http://localhost:8001')({
     item: {
       create: ['record'],
-      read: ['id']
+      read: ['id'],
     },
     user: {
       create: ['record'],
-      find: ['fields', 'filter', 'value']
+      find: ['email'],
     },
     auth: {
       register: ['id', 'password'],
-      login: ['email', 'password']
+      login: ['email', 'password'],
     }
   });
   return result

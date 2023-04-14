@@ -36,7 +36,7 @@ const Reset = () => {
       return
     }
 
-    await api.auth.register({ id, password })
+    await api.auth.register({ id, password }) // TODO Wrap try catch
     
     navigate(`/login`)
   }
