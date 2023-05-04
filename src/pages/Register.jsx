@@ -10,7 +10,7 @@ import '../styles/Register.css'
 const Register = () => {
   const [email, setEmail] = useState('')
   const [isDone, setIsDone] = useState(false)
-  const [errorText, setErrorText] = useState('')
+  const [error, setError] = useState('')
 
   const api = useContext(GlobalContext)
 
@@ -19,16 +19,16 @@ const Register = () => {
   }
 
   const handleDoneClick = async () => {
-    setErrorText('')
+    setError('')
     if (!email) {
-      setErrorText('Empty required field')
+      setError('Empty required field')
       return
     }
     if (isValidEmail(email)) {
       try {
         const apiResponse = await api.user.find({ email })
         if (apiResponse.user) {
-          setErrorText('This email is already in use')
+          setError('This email is already in use')
         } else {
           const user = await api.user.create({ email })
           const url = `localhost:3000/reset/${user.userId}`
@@ -38,10 +38,10 @@ const Register = () => {
           setIsDone(true)
         }
       } catch (error) {
-        setErrorText(error.message)
+        setError(error.message)
       }
     } else {
-      setErrorText('Invalid Email Address')
+      setError('Invalid Email Address')
       return
     }
   }
@@ -63,9 +63,9 @@ const Register = () => {
               onChange={handleEmailChange}
             />
             <Button onClick={handleDoneClick}>Done</Button>
-            {errorText && (
+            {error && (
               <p className='error'>
-                {errorText}
+                {error}
               </p>
             )}
           </>

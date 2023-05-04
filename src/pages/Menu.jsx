@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
-
 import { AuthContext } from '../context/auth'
+import { useNavigate } from "react-router-dom";
 import Button from '../components/Button/Button'
 
-// import '../styles/Common.css'
+import '../styles/Common.css'
 import '../styles/Menu.css';
 
 const buttons = [
@@ -23,14 +23,20 @@ const MenuButton = ({ onClick, label }) => {
 
 const Menu = () => {
   const { isAuth, setIsAuth } = useContext(AuthContext)
-
+  const navigate = useNavigate()
   const handlerFunctions = new Map([
-    ['today', () => {}],
-    ['export', () => {}],
-    ['import', () => {}],
+    ['today', () => {
+      navigate('/today')
+    }],
+    ['export', () => {
+
+    }],
+    ['import', () => {
+
+    }],
     ['logout', () => {
       setIsAuth(false)
-      localStorage.removeItem('auth')
+      localStorage.removeItem('token')
     }],
   ])
 

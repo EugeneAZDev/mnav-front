@@ -14,3 +14,9 @@
 .button:hover {
   background-color: #00562b;
 }
+
+.button-narrow {
+  padding: 8px 1px;
+  min-width: 120px;
+  width: 120px;
+}

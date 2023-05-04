@@ -25,8 +25,8 @@ const Login = () => {
   }
 
   const handleSubmit = async (event) => {
-    setError('')
     event.preventDefault()
+    setError('')
 
     if (!email || !password) {
       setError('Email and Password are required fields')
@@ -37,11 +37,13 @@ const Login = () => {
       return
     }
 
-    const status = await api.auth.login({ email, password })
-    console.log(status)
-
-    // setIsAuth(true)
-    // localStorage.setItem('auth', 'true')
+    try {
+      const status = await api.auth.login({ email, password })
+      localStorage.setItem('token', status.token)
+      setIsAuth(true)
+    } catch (error) {
+      setError(error.message)
+   }
   }
 
   return (

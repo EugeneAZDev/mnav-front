@@ -7,7 +7,7 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    if (localStorage.getItem('auth')) setIsAuth(true)
+    if (localStorage.getItem('token')) setIsAuth(true)
     setIsLoading(false)
   }, [])
 

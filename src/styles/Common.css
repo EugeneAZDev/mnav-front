@@ -11,7 +11,7 @@ input {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 50vh;
 }
 
 .form-content {
@@ -28,4 +28,8 @@ input {
   color: #ff0000;
   margin-top: 16px;
   font-weight: bold;
+}
+
+.back-two-buttons-container button:first-child {
+  margin-right: 20px;
 }
