@@ -15,8 +15,9 @@ transport.http = (url) => (structure) => {
     const service = structure[name];
     const methods = Object.keys(service);
     for (const method of methods) {
-      api[name][method] = ({ token, ...args } = {}) =>
+      api[name][method] = ({ ...args } = {}) =>
       {
+        const token = localStorage.getItem('token');
         if (token) HEADERS['Authorization'] = `Bearer ${token}`
         return new Promise((resolve, reject) => {
           fetch(`${url}/api/${name}/${method}`, {
@@ -39,7 +40,7 @@ transport.http = (url) => (structure) => {
 
 const scaffold = (url) => transport['http'](url);
 
-export default async function apiMethods() {
+export default async function getApiMethods() {
   const url = 'http://localhost:8001'
   const systemApi = await scaffold(url)({ system: { load: [] }});
   const systemResponse = await systemApi.system.load();

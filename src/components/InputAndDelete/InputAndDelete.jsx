@@ -5,9 +5,10 @@ import deleteIcon from '../../images/delete.png'
 const InputAndDelete = ({
   inputIndex,
   inputValue,
+  onBlur,
   onChange,
   onClick,
-  onDelete
+  onDelete,
 }) => {
   const [value, setValue] = useState('')
 
@@ -24,6 +25,10 @@ const InputAndDelete = ({
     onClick(event, inputIndex)
   }
 
+  const handleInputOnBlur = () => {
+    onBlur(inputIndex)
+  }
+
   return (
     <div>
       <input
@@ -33,6 +38,7 @@ const InputAndDelete = ({
         value={inputValue}
         onChange={handleInputChange}
         onClick={handleInputOnClick}
+        onBlur={handleInputOnBlur}
       />
       <img
         className={css.image}

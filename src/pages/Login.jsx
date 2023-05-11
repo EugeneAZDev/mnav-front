@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 
-import { AuthContext } from '../context/auth';
+import { AuthContext } from '../context/auth'
 import GlobalContext from '../context/global.js'
 import isValidEmail from '../utils/validateEmail.js'
 
@@ -12,9 +12,9 @@ import '../styles/Common.css'
 const Login = () => {
   const { isAuth, setIsAuth } = useContext(AuthContext)
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')  
+  const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  
+
   const api = useContext(GlobalContext)
 
   const handleEmailChange = event => {
@@ -24,7 +24,7 @@ const Login = () => {
     setPassword(event.target.value)
   }
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async event => {
     event.preventDefault()
     setError('')
 
@@ -38,12 +38,12 @@ const Login = () => {
     }
 
     try {
-      const status = await api.auth.login({ email, password })
-      localStorage.setItem('token', status.token)
+      const result = await api.auth.login({ email, password })
+      localStorage.setItem('token', result.token)
       setIsAuth(true)
     } catch (error) {
       setError(error.message)
-   }
+    }
   }
 
   return (

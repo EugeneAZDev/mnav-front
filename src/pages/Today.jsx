@@ -1,49 +1,67 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
 import Button from '../components/Button/Button'
 import Title from '../components/Title/Title'
-import { useNavigate } from 'react-router-dom'
+
 import '../styles/Common.css'
 import '../styles/Today.css'
 
+import getApi from '../api'
+
 const Today = () => {
+  const [ items, setItems ] = useState([]);
+
   const navigate = useNavigate();
-
   const today = new Date().toLocaleDateString()
-  const items = [ 'Category 1' ]
-
+  
   const handleItemClick = category => {
     console.log(`You clicked on ${category}`)
   }
+
+  async function fetchItems() {
+    // Turn on the loader
+    try {
+      const api = await getApi();
+      const result = await api.item.findByUser();
+      return result.items.map(data => data.title);
+    } catch (error) {
+      console.error('Error fetching items:', error);
+    } finally {
+      // Turn off the loader
+    }
+  }
+
+  useEffect(() => {
+    async function fetchData() {
+      const titles = await fetchItems()
+      setItems(titles)
+    }
+    fetchData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleBackClick = () => {
     navigate('/menu');
   }
   
   const handleAddItemClick = () => {
-    navigate('/edit-item')
+    navigate('/edit-item/')
   }
 
   return (
     <div className='today-form'>
       <div className='today-form-content'>
         <Title text={today} />
-        <div
-          style={{
-            maxHeight: '300px',
-            overflowY: 'auto',
-            marginBottom: '16px'
-          }}
-        >
-          {items.map((category, index) => (
+          {items.map((item, index) => (
             <button
-              key={category}
+              key={item}
               className='today-item'
-              onClick={() => handleItemClick(category)}
+              onClick={() => handleItemClick(item)}
             >
-              { `Item ${index + 1}` }
+              { item }
             </button>
           ))}
-        </div>
         <div className='back-two-buttons-container'>
           <Button narrow onClick={handleBackClick}>Back</Button>
           <Button narrow onClick={handleAddItemClick}>Add Item</Button>
@@ -53,4 +71,4 @@ const Today = () => {
   )
 }
 
-export default Today
+export default Today;

@@ -1,64 +1,62 @@
-import React, { useContext } from "react";
+import React, { useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
+
 import { AuthContext } from '../context/auth'
-import { useNavigate } from "react-router-dom";
+
 import Button from '../components/Button/Button'
 
 import '../styles/Common.css'
-import '../styles/Menu.css';
+import '../styles/Menu.css'
 
 const buttons = [
-  { id: 'today', label: 'TODAY' },
+  { id: 'today',  label: 'TODAY' },
   { id: 'export', label: 'EXPORT' },
   { id: 'import', label: 'IMPORT' },
   { id: 'logout', label: 'LOG OUT' }
-];
-
-const MenuButton = ({ onClick, label }) => {
-  return (
-    <button className="menu-button" onClick={onClick}>
-      {label}
-    </button>
-  );
-};
+]
 
 const Menu = () => {
-  const { isAuth, setIsAuth } = useContext(AuthContext)
   const navigate = useNavigate()
+  const { setIsAuth } = useContext(AuthContext)
+  
   const handlerFunctions = new Map([
-    ['today', () => {
-      navigate('/today')
-    }],
+    [
+      'today',
+      async () => {
+        navigate('/today');
+      }
+    ],
     ['export', () => {
 
     }],
     ['import', () => {
-
+      
     }],
-    ['logout', () => {
-      setIsAuth(false)
-      localStorage.removeItem('token')
-    }],
+    [
+      'logout',
+      () => {
+        setIsAuth(false)
+        localStorage.removeItem('token')
+      }
+    ]
   ])
 
-  const handleButtonClick = (id) => {
+  const handleButtonClick = id => {
     handlerFunctions.get(id)()
-  };
+  }
 
   return (
-    <div className="menu-container">
-      <div className="menu-label">MENU</div>
-      <div className="menu-buttons">
-        {buttons.map((button) => (
-          <Button
-            key={button.id}
-            onClick={() => handleButtonClick(button.id)}
-          >
+    <div className='menu-container'>
+      <div className='menu-label'>MENU</div>
+      <div className='menu-buttons'>
+        {buttons.map(button => (
+          <Button key={button.id} onClick={() => handleButtonClick(button.id)}>
             {button.label}
           </Button>
         ))}
       </div>
-      </div>
-  );
-};
+    </div>
+  )
+}
 
-export default Menu;
+export default Menu
