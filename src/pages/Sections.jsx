@@ -18,7 +18,6 @@ const Sections = () => {
 
   const [error, setError] = useState('')
   const [sections, setSections] = useState([])
-  const [sectionsMapToUpdate, setSectionsMapToUpdate] = useState(new Map())
   const [sectionTitlesToAdd, setSectionTitlesToAdd] = useState([])
 
   const idTitleMapRef = React.useRef()
@@ -47,14 +46,13 @@ const Sections = () => {
     const cleanSectionTitlesToAdd = [...sectionTitlesToAdd].filter(
       item => item !== defaultLabel
     )
-
-    // await refreshEntities(
-    //   sectionIdsToDelete,
-    //   sectionsMapToUpdate,
-    //   cleanSectionTitlesToAdd,
-    //   'section'
-    // )
-
+    try {
+      await Promise.all(
+        cleanSectionTitlesToAdd.map( title => api.section.create({ title }) )
+      )
+    } catch (e) {
+      setError(e)
+    }
     navigate('/edit-item')
   }
 
@@ -78,21 +76,14 @@ const Sections = () => {
   }
 
   const handleSectionChange = (event, index) => {
-    const newValue = event.target.value    
+    const newValue = event.target.value
     const clone = [...sections]
     const currentTitle = clone[index]
     const key = getKeyByValue(currentTitle, idTitleMapRef.current)
     clone[index] = newValue
     setSections(clone)
-    if (key) {
-      setSectionsMapToUpdate(prevMap => {
-        const newMap = new Map(prevMap)
-        newMap.set(key, newValue)
-        idTitleMapRef.current.set(key, newValue)
-        return newMap
-      })
-    }
-     else {
+    if (key) idTitleMapRef.current.set(key, newValue)
+    else {
       setSectionTitlesToAdd(prevTitles => {
         const newTitles = [...prevTitles]
         const titleIndex = newTitles.indexOf(currentTitle)
@@ -108,11 +99,7 @@ const Sections = () => {
     const value = sections[index]
     const key = getKeyByValue(value, idTitleMapRef.current)
     try {
-      if (key) {
-        await api.section.update({ id: key, title: value })
-      } else {
-        await api.section.create({ title: value })
-      }
+      if (key) await api.section.update({ id: key, title: value })
     } catch (error) {
       setError(error.message)
     }
@@ -124,8 +111,11 @@ const Sections = () => {
     const currentTitle = clone[index]
     const key = getKeyByValue(currentTitle, idTitleMapRef.current)
     try {
-      if (key) await api.section.delete({ id: key })
+      if (key) {
+        await api.section.delete({ id: key })
+      }
       clone.splice(index, 1)
+      idTitleMapRef.current.delete(key)
       setSections(clone)
     } catch (error) {
       setError(error.message)

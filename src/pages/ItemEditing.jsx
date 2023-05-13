@@ -1,43 +1,47 @@
-import React, { useEffect, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import Button from '../components/Button/Button';
-import Title from '../components/Title/Title';
-import ComboBox from '../components/ComboBox/ComboBox';
+import Button from '../components/Button/Button'
+import Title from '../components/Title/Title'
+import ComboBox from '../components/ComboBox/ComboBox'
 
-import '../styles/Common.css';
+import '../styles/Common.css'
 
 import GlobalContext from '../context/global.js'
 
 const ItemEditing = () => {
   const api = useContext(GlobalContext)
-  const navigate = useNavigate();
-  const [ options, setOptions ] = useState([]);
-  const [ selectedOption, setSelectedOption ] = useState('');
+  const navigate = useNavigate()
+  const [options, setOptions] = useState([])
+  const [selectedOption, setSelectedOption] = useState('')
 
   useEffect(() => {
-    async function fetchData() {
-      const sectionList = await api.section.findByUser();
-      setOptions(sectionList.sections.map(data => data.title));
+    async function fetchData () {
+      const sectionList = await api.section.findByUser()
+      setOptions(sectionList.sections.map(data => data.title))
     }
 
     fetchData()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleOptionChange = event => {
-    setSelectedOption(event.target.value);
-  };
+    setSelectedOption(event.target.value)
+  }
 
   const handleEditSectionsClick = item => {
-    navigate('/sections');
-  };
+    navigate('/sections')
+  }
 
   const handleCancelClick = () => {
-    navigate('/today');
-  };
+    navigate('/today')
+  }
 
-  const handleSaveClick = () => {};
+  const handleSaveClick = () => {
+    console.log(selectedOption)
+
+    navigate('/today')
+  }
 
   return (
     <div className='form'>
@@ -61,7 +65,7 @@ const ItemEditing = () => {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default ItemEditing;
+export default ItemEditing

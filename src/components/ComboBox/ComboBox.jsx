@@ -21,8 +21,8 @@ const ComboBox = ({
         <option key='none' className={`${css.option} option`} value=''>
           None
         </option>
-        {options.map(option => (
-          <option key={option} className={`${css.option} option`} value={option}>
+        {options.map((option, index) => (
+          <option key={index} className={`${css.option} option`} value={option}>
             {option}
           </option>
         ))}

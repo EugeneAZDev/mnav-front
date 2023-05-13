@@ -25,7 +25,10 @@ transport.http = (url) => (structure) => {
             headers: HEADERS,
             body: JSON.stringify({ args }),
           }).then((res) => {
-            if (res.status === 200 || res.status === 201) resolve(res.json());
+            const statusType = Math.floor(res.status / 10);
+            if (statusType === 20) {
+              resolve(res.json());
+            }            
             else res.text().then((message) => {
               reject(new Error(`${message}`));
             });
