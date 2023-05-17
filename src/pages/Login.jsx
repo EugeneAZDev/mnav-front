@@ -5,15 +5,18 @@ import GlobalContext from '../context/global.js'
 import isValidEmail from '../utils/validateEmail.js'
 
 import Button from '../components/Button/Button'
+import Loader from '../components/Loader/Loader'
 import Title from '../components/Title/Title'
 
 import '../styles/Common.css'
 
 const Login = () => {
   const { isAuth, setIsAuth } = useContext(AuthContext)
+
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [password, setPassword] = useState('')
 
   const api = useContext(GlobalContext)
 
@@ -27,6 +30,7 @@ const Login = () => {
   const handleSubmit = async event => {
     event.preventDefault()
     setError('')
+    setIsLoading(true)
 
     if (!email || !password) {
       setError('Email and Password are required fields')
@@ -40,8 +44,10 @@ const Login = () => {
     try {
       const result = await api.auth.login({ email, password })
       localStorage.setItem('token', result.token)
+      setIsLoading(false)
       setIsAuth(true)
     } catch (error) {
+      setIsLoading(false)
       setError(error.message)
     }
   }
@@ -64,7 +70,11 @@ const Login = () => {
           value={password}
           onChange={handlePasswordChange}
         />
-        <Button onClick={handleSubmit}>Sign in</Button>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <Button onClick={handleSubmit}>Sign in</Button>
+        )}
         {error && <div className='error'>{error}</div>}
       </div>
     </div>

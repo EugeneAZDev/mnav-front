@@ -1,0 +1,12 @@
+.formHeader {
+  justify-content:flex-start;
+  display: flex;
+  width: 100%;
+  padding: 8px 16px 30px;
+  margin-bottom: 50px;
+}
+
+label {
+  font-size: 30px;
+  padding-right: 30px;
+}

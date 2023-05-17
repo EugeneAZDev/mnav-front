@@ -9,21 +9,22 @@ import GlobalContext from '../context/global.js'
 import '../styles/Common.css'
 
 const Reset = () => {
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const api = useContext(GlobalContext)
+
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
-  const { id } = useParams()
-
-  const api = useContext(GlobalContext)
-
-  const navigate = useNavigate()
+  
+  const handleConfirmPasswordChange = event => {
+    setConfirmPassword(event.target.value)
+  }
 
   const handlePasswordChange = event => {
     setPassword(event.target.value)
   }
-  const handleConfirmPasswordChange = event => {
-    setConfirmPassword(event.target.value)
-  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
 

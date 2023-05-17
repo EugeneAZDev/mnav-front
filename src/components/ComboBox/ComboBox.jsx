@@ -1,22 +1,22 @@
 import React from 'react'
-import Label from '../../components/Label/Label'
 import editIcon from '../../images/edit.png'
 import css from './ComboBox.module.css'
 
 const ComboBox = ({
+  title,
   options,
-  selectedOption,
-  handleOptionChange,
-  handleEditSectionsClick
+  value,
+  handleComboBoxChange,
+  handleEditClick
 }) => {
   return (
     <div className={css.div}>
-      <Label text='Sections' />
+      <label className={css.label}>{title}</label>
       <select
         id='combo-box'
         className={`${css.select} select`}
-        value={selectedOption}
-        onChange={handleOptionChange}
+        value={value}
+        onChange={handleComboBoxChange}
       >
         <option key='none' className={`${css.option} option`} value=''>
           None
@@ -31,7 +31,7 @@ const ComboBox = ({
         className={css.image}
         src={editIcon}
         alt='Edit'
-        onClick={handleEditSectionsClick}
+        onClick={handleEditClick}
       />
     </div>
   )

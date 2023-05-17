@@ -1,11 +1,13 @@
 import React, { useContext, useState } from 'react'
-import isValidEmail from '../utils/validateEmail.js'
-import Button from '../components/Button/Button.jsx'
 import GlobalContext from '../context/global.js'
+
+import Button from '../components/Button/Button.jsx'
 import Title from '../components/Title/Title.jsx'
 
 import '../styles/Common.css'
 import '../styles/Register.css'
+
+import isValidEmail from '../utils/validateEmail.js'
 
 const Register = () => {
   const [email, setEmail] = useState('')

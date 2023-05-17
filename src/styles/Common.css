@@ -1,10 +1,41 @@
-input {
-  width: 100%;
-  padding: 8px 16px;
-  border-radius: 4px;
-  border: none;
-  margin-bottom: 16px;
+.back-two-buttons-container button:first-child {
+  margin: 20px 20px 0px 0px;
+}
+
+.success {
+  font-size: 16px;
+  color: navy;
+  margin-top: 16px;
+  font-weight: bold;
+}
+
+.edit-image {
+  width: 10%;
+  height: 20%;
+}
+
+.element {
+  display: block;
+  margin: 6px 6px 6px 8px;
+  width: 250px;
+  height: 30px;
   font-size: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5px;
+  background-color: transparent;
+}
+
+.element-value {
+  justify-content: center;
+}
+
+.error {
+  font-size: 16px;
+  color: #ff0000;
+  margin-top: 16px;
+  font-weight: bold;
 }
 
 .form {
@@ -23,19 +54,39 @@ input {
   text-align: center;
 }
 
-.error {
-  font-size: 16px;
-  color: #ff0000;
-  margin-top: 16px;
-  font-weight: bold;
+input {
+  width: 100%;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  margin-bottom: 16px;
+  font-size: 20px;
 }
 
-.back-two-buttons-container button:first-child {
-  margin: 20px 20px 0px 0px;
+.item-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
+.item-form-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 400px;
+  text-align: center;
+  height: 80vh;
+  overflow-y: 'auto';
 }
 
 .scroll {
   max-height: 300px;
   overflow-y: auto;
   margin-bottom: 16px;
+}
+
+.scroll-gap {
+  margin-top: 20px;
 }

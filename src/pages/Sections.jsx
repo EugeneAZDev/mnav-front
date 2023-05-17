@@ -25,10 +25,10 @@ const Sections = () => {
   React.useEffect(() => {
     async function fetchData () {
       const sectionList = await api.section.findByUser()
-      setSections(sectionList.sections.map(data => data.title))
+      setSections(sectionList.map(data => data.title))
 
       const map = new Map()
-      sectionList.sections.forEach(x => map.set(x.id, x.title))
+      sectionList.forEach(x => map.set(x.id, x.title))
       idTitleMapRef.current = map
     }
 
@@ -36,7 +36,7 @@ const Sections = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleAddSection = index => {
+  const handleAddSection = () => {
     const clone = [...sections, defaultLabel]
     setSections(clone)
     setSectionTitlesToAdd(prevTitles => [...prevTitles, defaultLabel])
