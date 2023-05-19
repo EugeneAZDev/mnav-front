@@ -8,6 +8,7 @@ import Title from '../components/Title/Title'
 import '../styles/Common.css'
 
 import getApi from '../api'
+import ButtonWithLongPress from '../components/ButtonWithLongPress/ButtonWithLongPress'
 
 const Today = () => {
   const navigate = useNavigate()
@@ -47,13 +48,14 @@ const Today = () => {
         ) : (
           <div className='scroll'>
             {items.map(item => (
-              <button
+              <ButtonWithLongPress
                 key={item.title}
                 className='element'
-                onClick={() => navigate(`/items/${item.id}`)}
+                onLongPress={() => navigate(`/items/${item.id}`)}
+                onPress={() => navigate(`/value/${item.id}/${item.title}`)}
               >
                 {item.title}
-              </button>
+              </ButtonWithLongPress>
             ))}
           </div>
         )}

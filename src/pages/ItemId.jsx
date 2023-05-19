@@ -14,12 +14,12 @@ const ItemId = () => {
   const { id } = useParams()
   const api = React.useContext(GlobalContext)
 
-  const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const [deletedMsg, setDeletedMsg] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
+  const [showDeleteButton, setShowDeleteButton] = useState(false)
   const [title, setTitle] = useState('')
   const [values, setValues] = useState([])
-  const [showDeleteButton, setShowDeleteButton] = useState(false)
 
   React.useEffect(() => {
     async function fetchData () {
@@ -29,7 +29,7 @@ const ItemId = () => {
         const todayValueList = await api.value.getToday({ id })
         if (valuesCount === 0) setShowDeleteButton(true)
         setTitle(item.title)
-        setValues(todayValueList.values.map(e => e.value))
+        setValues(todayValueList.values)
         setIsLoading(false)
       } catch (error) {
         setError(error)
@@ -51,8 +51,6 @@ const ItemId = () => {
     }
   }
 
-  const handleValueClick = value => {}
-
   return (
     <div className='item-form'>
       <div className='item-form-content'>
@@ -70,13 +68,13 @@ const ItemId = () => {
               />
               <div className='scroll scroll-gap'>
                 {values.length ? (
-                  values.map((value, index) => (
+                  values.map((valueList, index) => (
                     <button
                       key={index}
                       className='element element-value'
-                      onClick={() => handleValueClick(value.id)}
+                      onClick={() => navigate(`/values/${valueList.id}/${title}`)}
                     >
-                      {value}
+                      {valueList.value}
                     </button>
                   ))
                 ) : (

@@ -73,7 +73,7 @@ const ItemEditing = () => {
           setTarget(item.target)
           setTitle(item.title)
           setInitialTitle(item.title)
-          setInitialValueType(item.title)
+          setInitialValueType(item.valueType)
           setSelectedSection(sectionTitle)
           setSelectedValueType(item.valueType)
           setSelectedVariation(item.valueVariation)
@@ -116,6 +116,14 @@ const ItemEditing = () => {
     const sectionId = section && section[0]?.id
     const valueVariation = Boolean(selectedVariation)
     const valueType = selectedValueType
+
+    if (
+      (valueType !== initialValueType && valueType === 'text') ||
+      (initialValueType === 'text' && valueType !== 'text')
+    ) {
+      setError('Type value must be consistent')
+      return
+    }
 
     if (!title) {
       setError('"Name of the Item" field is required')

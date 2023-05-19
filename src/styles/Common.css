@@ -14,6 +14,11 @@
   height: 20%;
 }
 
+.edit-value {
+  text-align: 'center';
+  margin: 15px 0px 10px 0px;
+}
+
 .element {
   display: block;
   margin: 6px 6px 6px 8px;
