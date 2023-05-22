@@ -1,28 +1,29 @@
 import React, { useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import GlobalContext from '../context/global.js'
+import ApiContext from '../context/api.js'
 
-import Button from '../components/Button/Button'
 import Loader from '../components/Loader/Loader'
 import Title from '../components/Title/Title'
 import ComboBox from '../components/ComboBox/ComboBox'
 import DoubleComboBox from '../components/DoubleComboBox/DoubleComboBox'
+import TwoButtons from '../components/TwoButtons/TwoButtons.jsx'
 
 import '../styles/Common.css'
 import equalPlainObjects from '../utils/equalPlainObjects.js'
+import errorMessageHandler from '../utils/errorMessageHandler.js'
 
 const ItemEditing = () => {
   const navigate = useNavigate()
   const { id } = useParams()
-  const api = React.useContext(GlobalContext)
+  const api = React.useContext(ApiContext)
 
   const [description, setDescription] = useState('')
   const [editMode, setIsEditMode] = useState(false)
   const [initialItem, setInitialItem] = useState({})
   const [initialTitle, setInitialTitle] = useState('')
   const [initialValueType, setInitialValueType] = useState('')
-  const [loading, setIsLoading] = useState(true)
+  const [loading, setLoading] = useState(true)
   const [sections, setSections] = useState([])
   const [selectedSection, setSelectedSection] = useState('')
   const [selectedVariation, setSelectedVariation] = useState('Positive')
@@ -40,49 +41,40 @@ const ItemEditing = () => {
   React.useEffect(() => {
     async function fetchData () {
       try {
-        const items = await api.item.findByUser()
-        const typeList = await api.item.getValueType()
-        const sectionList = await api.section.findByUser()
-        setSections(sectionList.map(data => data.title))
-        sectionListRef.current = sectionList
-        typeListRef.current = typeList
+        const { items } = await api.item.findByUser()
+        const { types } = await api.item.getValueType()
+        typeListRef.current = types
+        const { sections } = await api.section.findByUser()
+        const sectionTitles = sections
+          ? sections.map(data => data.title)
+          : ['None']
+        sectionListRef.current = sectionTitles
+        setSections(sectionTitles)
         existedItemsRef.current = items.map(item => item.title)
         const item = items.find(item => item.id === id)
-        const {
-          title,
-          description,
-          target,
-          sectionId,
-          valueVariation,
-          valueType
-        } = item
-        setInitialItem({
-          title,
-          description,
-          target,
-          sectionId,
-          valueVariation,
-          valueType
-        })
         if (id && item) {
-          const selectedSection = sectionList.find(
-            section => section.id === item.sectionId
-          )
-          const sectionTitle = selectedSection.title
-          setDescription(item.description)
-          setTarget(item.target)
-          setTitle(item.title)
-          setInitialTitle(item.title)
-          setInitialValueType(item.valueType)
-          setSelectedSection(sectionTitle)
-          setSelectedValueType(item.valueType)
-          setSelectedVariation(item.valueVariation)
           setIsEditMode(true)
+          const { title, description, target, sectionId, valueVariation, valueType } = item
+          setInitialItem({ title, description, target, sectionId, valueVariation, valueType })
+          if (sectionId !== null) {
+            const selectedSection = sections.find(
+              section => section.id === item.sectionId
+            )
+            const sectionTitle = selectedSection.title
+            setSelectedSection(sectionTitle)
+          }
+          setDescription(description)
+          setTarget(target)
+          setTitle(title)
+          setInitialTitle(title)
+          setInitialValueType(valueType)
+          setSelectedValueType(valueType)
+          setSelectedVariation(valueVariation)
         }
-
-        setIsLoading(false)
+        setLoading(false)
       } catch (error) {
-        setIsLoading(false)
+        setLoading(false)
+        setError(errorMessageHandler(error))
       }
     }
 
@@ -110,6 +102,7 @@ const ItemEditing = () => {
 
   const handleSaveClick = async () => {
     setError('')
+    console.log(sectionListRef.current)
     const section = sectionListRef.current.filter(
       section => section.title === selectedSection
     )
@@ -118,8 +111,9 @@ const ItemEditing = () => {
     const valueType = selectedValueType
 
     if (
-      (valueType !== initialValueType && valueType === 'text') ||
-      (initialValueType === 'text' && valueType !== 'text')
+      editMode &&
+      ((valueType !== initialValueType && valueType === 'text') ||
+        (initialValueType === 'text' && valueType !== 'text'))
     ) {
       setError('Type value must be consistent')
       return
@@ -138,6 +132,7 @@ const ItemEditing = () => {
       return
     }
 
+    setLoading(true)
     try {
       const item = {
         title,
@@ -157,6 +152,7 @@ const ItemEditing = () => {
         navigate('/today')
       }
     } catch (e) {
+      setLoading(false)
       setError(e)
     }
   }
@@ -208,14 +204,12 @@ const ItemEditing = () => {
             />
           </>
         )}
-        <div className='back-two-buttons-container'>
-          <Button narrow onClick={handleCancelClick}>
-            Cancel
-          </Button>
-          <Button narrow onClick={handleSaveClick}>
-            Save
-          </Button>
-        </div>
+        <TwoButtons
+          leftTitle='Cancel'
+          handleLeftClick={handleCancelClick}
+          rightTitle='Save'
+          handleRightClick={handleSaveClick}
+        />
         {error && <div className='error'>{error}</div>}
       </div>
     </div>

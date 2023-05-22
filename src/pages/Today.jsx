@@ -1,32 +1,31 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
 import Button from '../components/Button/Button'
 import Loader from '../components/Loader/Loader'
 import Title from '../components/Title/Title'
-
+import TwoButtons from '../components/TwoButtons/TwoButtons'
+import ApiContext from '../context/api.js'
 import '../styles/Common.css'
-
-import getApi from '../api'
-import ButtonWithLongPress from '../components/ButtonWithLongPress/ButtonWithLongPress'
+import errorMessageHandler from '../utils/errorMessageHandler.js'
 
 const Today = () => {
   const navigate = useNavigate()
-
+  const api = React.useContext(ApiContext)
+  const [error, setError] = useState('')
   const [items, setItems] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [loading, setLoading] = useState(true)
 
   const today = new Date().toLocaleDateString()
 
   async function fetchItems () {
     try {
-      const api = await getApi()
-      const result = await api.item.findByUser()
-      setIsLoading(false)
-      return result
+      const { items } = await api.item.findByUser()
+      setLoading(false)
+      return items
     } catch (error) {
-      setIsLoading(false)
-      console.error('Error fetching items:', error)
+      setLoading(false)
+      setError(errorMessageHandler(error))    
+      return [];
     }
   }
 
@@ -43,30 +42,32 @@ const Today = () => {
     <div className='item-form'>
       <div className='item-form-content'>
         <Title text={today} />
-        {isLoading ? (
+        {loading ? (
           <Loader />
         ) : (
           <div className='scroll'>
-            {items.map(item => (
-              <ButtonWithLongPress
+            {items.length ? items.map(item => (
+              <Button
+                activeLongPress={true}
                 key={item.title}
                 className='element'
                 onLongPress={() => navigate(`/items/${item.id}`)}
-                onPress={() => navigate(`/value/${item.id}/${item.title}`)}
+                onPress={() => navigate(`/values/${item.id}/${item.title}`)}
               >
                 {item.title}
-              </ButtonWithLongPress>
-            ))}
+              </Button>
+            )) : (
+              <strong className='element element-value'>No items</strong>
+            )}
           </div>
         )}
-        <div className='back-two-buttons-container'>
-          <Button narrow onClick={() => navigate('/menu')}>
-            Back
-          </Button>
-          <Button narrow onClick={() => navigate('/edit-item')}>
-            Add Item
-          </Button>
-        </div>
+        <TwoButtons
+          leftTitle='Back'
+          handleLeftClick={() => navigate('/menu')}
+          rightTitle='Add Item'
+          handleRightClick={() => navigate('/edit-item')}
+        />
+        {error && <div className='error'>{error}</div>}
       </div>
     </div>
   )

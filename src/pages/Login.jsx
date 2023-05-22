@@ -1,16 +1,15 @@
 import React, { useContext, useState } from 'react'
-
 import { AuthContext } from '../context/auth'
-import GlobalContext from '../context/global.js'
-import isValidEmail from '../utils/validateEmail.js'
-
 import Button from '../components/Button/Button'
 import Loader from '../components/Loader/Loader'
 import Title from '../components/Title/Title'
-
+import ApiContext from '../context/api.js'
+import isValidEmail from '../utils/validateEmail.js'
+import errorMessageHandler from '../utils/errorMessageHandler.js'
 import '../styles/Common.css'
 
 const Login = () => {
+  // eslint-disable-next-line no-unused-vars
   const { isAuth, setIsAuth } = useContext(AuthContext)
 
   const [email, setEmail] = useState('')
@@ -18,7 +17,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [password, setPassword] = useState('')
 
-  const api = useContext(GlobalContext)
+  const api = useContext(ApiContext)
 
   const handleEmailChange = event => {
     setEmail(event.target.value)
@@ -30,7 +29,6 @@ const Login = () => {
   const handleSubmit = async event => {
     event.preventDefault()
     setError('')
-    setIsLoading(true)
 
     if (!email || !password) {
       setError('Email and Password are required fields')
@@ -42,13 +40,14 @@ const Login = () => {
     }
 
     try {
-      const result = await api.auth.login({ email, password })
-      localStorage.setItem('token', result.token)
+      setIsLoading(true)
+      const { token } = await api.auth.login({ email, password })
+      localStorage.setItem('token', token)
       setIsLoading(false)
       setIsAuth(true)
     } catch (error) {
       setIsLoading(false)
-      setError(error.message)
+      setError(errorMessageHandler(error))
     }
   }
 

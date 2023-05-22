@@ -1,20 +1,18 @@
 import React, { useContext, useState } from 'react'
-import GlobalContext from '../context/global.js'
-
 import Button from '../components/Button/Button.jsx'
 import Title from '../components/Title/Title.jsx'
-
+import ApiContext from '../context/api.js'
 import '../styles/Common.css'
 import '../styles/Register.css'
-
 import isValidEmail from '../utils/validateEmail.js'
+import errorMessageHandler from '../utils/errorMessageHandler.js'
 
 const Register = () => {
   const [email, setEmail] = useState('')
   const [isDone, setIsDone] = useState(false)
   const [error, setError] = useState('')
 
-  const api = useContext(GlobalContext)
+  const api = useContext(ApiContext)
 
   const handleEmailChange = event => {
     setEmail(event.target.value)
@@ -28,8 +26,8 @@ const Register = () => {
     }
     if (isValidEmail(email)) {
       try {
-        const apiResponse = await api.user.find({ email })
-        if (apiResponse.user) {
+        const { user } = await api.user.find({ email })
+        if (user) {
           setError('This email is already in use')
         } else {
           const user = await api.user.create({ email })
@@ -40,7 +38,8 @@ const Register = () => {
           setIsDone(true)
         }
       } catch (error) {
-        setError(error.message)
+        console.log(error)
+        setError(errorMessageHandler(error))
       }
     } else {
       setError('Invalid Email Address')

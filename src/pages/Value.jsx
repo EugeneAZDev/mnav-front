@@ -1,28 +1,33 @@
 import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-
-import Button from '../components/Button/Button'
+import EditNumber from '../components/EditNumber/EditNumber'
 import Loader from '../components/Loader/Loader'
-import GlobalContext from '../context/global.js'
-
-import arrowUp from '../images/arrow-up.png'
-import arrowDown from '../images/arrow-down.png'
-
+import ApiContext from '../context/api.js'
+import TwoButtons from '../components/TwoButtons/TwoButtons'
 import '../styles/Common.css'
-import css from '../styles/ItemId.css'
+import css from '../styles/Item.css'
+import validNumberValue from '../utils/validNumberValue.js'
+import errorMessageHandler from '../utils/errorMessageHandler.js'
 
 const Value = () => {
   const navigate = useNavigate()
-  const { itemId, itemTitle } = useParams()
-  const api = React.useContext(GlobalContext)
+  const { valueId, itemId, itemTitle } = useParams()
+  const api = React.useContext(ApiContext)
 
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
-  const [value, setValue] = React.useState(10)
+  const [value, setValue] = React.useState()
 
   React.useEffect(() => {
     async function fetchData () {
       try {
+        if (valueId) {
+          const { value } = await api.value.get({ id: valueId })
+          setValue(value)
+        } else {
+          const { lastValue } = await api.item.getLastValue({ id: itemId })
+          if (validNumberValue(lastValue)) setValue(lastValue)
+        }
         setLoading(false)
       } catch (error) {
         setLoading(false)
@@ -41,7 +46,31 @@ const Value = () => {
       navigate('/today')
     } catch (error) {
       setLoading(false)
-      setError(error.message)
+      setError(errorMessageHandler(error))
+    }
+  }
+
+  const handleDeleteClick = async () => {
+    try {
+      setLoading(true)
+      await api.value.delete({ id: valueId })
+      setLoading(false)
+      navigate(`/items/${itemId}`)
+    } catch (error) {
+      setLoading(false)
+      setError(errorMessageHandler(error))
+    }
+  }
+
+  const handleSaveClick = async () => {
+    try {
+      setLoading(true)
+      await api.value.update({ id: valueId, value })
+      setLoading(false)
+      navigate(`/items/${itemId}`)
+    } catch (error) {
+      setLoading(false)
+      setError(errorMessageHandler(error))
     }
   }
 
@@ -50,43 +79,30 @@ const Value = () => {
       <div className='item-form-content'>
         <div className={css.formHeader}>
           <label>{itemTitle}</label>
-          <div className='edit-value'>
-            <div>
-              <img
-                src={arrowUp}
-                alt='Up'
-                className='edit-image'
-                onClick={() => {
-                  setValue(value + 1)
-                }}
-              />
-            </div>
-            <div>
-              <h1>{value}</h1>
-            </div>
-            <div>
-              <img
-                src={arrowDown}
-                alt='Down'
-                className='edit-image'
-                onClick={() =>
-                  value - 1 <= 0 ? setValue(1) : setValue(value - 1)
-                }
-              />
-            </div>
-          </div>
+          <EditNumber
+            value={value}
+            handleUp={() => setValue(value + 1)}
+            handleDown={() =>
+              value - 1 <= 0 ? setValue(1) : setValue(value - 1)
+            }
+          />
         </div>
         {loading ? (
           <Loader />
+        ) : valueId ? (
+          <TwoButtons
+            leftTitle='Delete'
+            handleLeftClick={handleDeleteClick}
+            rightTitle='Save'
+            handleRightClick={handleSaveClick}
+          />
         ) : (
-          <div className='back-two-buttons-container'>
-            <Button narrow onClick={() => navigate('/today')}>
-              Back
-            </Button>
-            <Button narrow onClick={handleAddClick}>
-              Add
-            </Button>
-          </div>
+          <TwoButtons
+            leftTitle='Back'
+            handleLeftClick={() => navigate('/today')}
+            rightTitle='Add'
+            handleRightClick={handleAddClick}
+          />
         )}
         {error && <div className='error'>{error}</div>}
       </div>

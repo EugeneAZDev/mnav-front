@@ -1,18 +1,15 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
-import Button from '../components/Button/Button.jsx'
-import Title from '../components/Title/Title.jsx'
 import InputAndDelete from '../components/InputAndDelete/InputAndDelete.jsx'
-
+import Title from '../components/Title/Title.jsx'
+import TwoButtons from '../components/TwoButtons/TwoButtons.jsx'
+import ApiContext from '../context/api.js'
 import '../styles/Common.css'
-
-import GlobalContext from '../context/global.js'
-
 import getKeyByValue from '../utils/getKeyMap.js'
+import errorMessageHandler from '../utils/errorMessageHandler.js'
 
 const Sections = () => {
-  const api = React.useContext(GlobalContext)
+  const api = React.useContext(ApiContext)
   const navigate = useNavigate()
   const defaultLabel = 'New section'
 
@@ -24,11 +21,10 @@ const Sections = () => {
 
   React.useEffect(() => {
     async function fetchData () {
-      const sectionList = await api.section.findByUser()
-      setSections(sectionList.map(data => data.title))
-
+      const { sections } = await api.section.findByUser()
+      setSections(sections.map(data => data.title))
       const map = new Map()
-      sectionList.forEach(x => map.set(x.id, x.title))
+      sections.forEach(x => map.set(x.id, x.title))
       idTitleMapRef.current = map
     }
 
@@ -48,7 +44,7 @@ const Sections = () => {
     )
     try {
       await Promise.all(
-        cleanSectionTitlesToAdd.map( title => api.section.create({ title }) )
+        cleanSectionTitlesToAdd.map(title => api.section.create({ title }))
       )
     } catch (e) {
       setError(e)
@@ -101,7 +97,7 @@ const Sections = () => {
     try {
       if (key) await api.section.update({ id: key, title: value })
     } catch (error) {
-      setError(error.message)
+      setError(errorMessageHandler(error))
     }
   }
 
@@ -118,7 +114,7 @@ const Sections = () => {
       idTitleMapRef.current.delete(key)
       setSections(clone)
     } catch (error) {
-      setError(error.message)
+      setError(errorMessageHandler(error))
     }
   }
 
@@ -127,27 +123,29 @@ const Sections = () => {
       <div className='form-content'>
         <Title text='Sections' />
         <div className='scroll'>
-          {sections.map((section, index) => (
-            <InputAndDelete
-              key={index}
-              defaultLabel={defaultLabel}
-              inputIndex={index}
-              inputValue={section}
-              onChange={event => handleSectionChange(event, index)}
-              onClick={event => handleOnClickInput(event, index)}
-              onDelete={handleDelete}
-              onBlur={() => handlerInputBlur(index)}
-            />
-          ))}
+          {sections.length ? (
+            sections.map((section, index) => (
+              <InputAndDelete
+                key={index}
+                defaultLabel={defaultLabel}
+                inputIndex={index}
+                inputValue={section}
+                onChange={event => handleSectionChange(event, index)}
+                onClick={event => handleOnClickInput(event, index)}
+                onDelete={handleDelete}
+                onBlur={() => handlerInputBlur(index)}
+              />
+            ))
+          ) : (
+            <strong className='element element-value'>No sections</strong>
+          )}
         </div>
-        <div className='back-two-buttons-container'>
-          <Button narrow onClick={handleBackClick}>
-            Back
-          </Button>
-          <Button narrow onClick={handleAddSection}>
-            Add Section
-          </Button>
-        </div>
+        <TwoButtons
+          leftTitle='Back'
+          handleLeftClick={handleBackClick}
+          rightTitle='Add Section'
+          handleRightClick={handleAddSection}
+        />
         {error && <div className='error'>{error}</div>}
       </div>
     </div>

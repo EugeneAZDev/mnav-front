@@ -1,16 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import { GlobalProvider } from './context/global';
+import { ApiProvider } from './context/api';
 import App from './App';
 // import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
-    <GlobalProvider>
+    <ApiProvider>
       <App />
-    </GlobalProvider>
+    </ApiProvider>
   </BrowserRouter>);
 
 // If you want to start measuring performance in your app, pass a function

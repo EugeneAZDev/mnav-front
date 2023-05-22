@@ -1,4 +1,4 @@
-.back-two-buttons-container button:first-child {
+.bottom-two-buttons-container button:first-child {
   margin: 20px 20px 0px 0px;
 }
 
@@ -14,12 +14,8 @@
   height: 20%;
 }
 
-.edit-value {
-  text-align: 'center';
-  margin: 15px 0px 10px 0px;
-}
-
 .element {
+  color: gray;
   display: block;
   margin: 6px 6px 6px 8px;
   width: 250px;
