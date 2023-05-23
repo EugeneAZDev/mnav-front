@@ -11,29 +11,37 @@ import errorMessageHandler from '../utils/errorMessageHandler.js'
 
 const Value = () => {
   const navigate = useNavigate()
-  const { valueId, itemId, itemTitle } = useParams()
+  const { itemId, itemTitle, valueType, valueId } = useParams()
   const api = React.useContext(ApiContext)
 
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
-  const [value, setValue] = React.useState()
+  const [value, setValue] = useState('')
+  const [isText, setIsText] = useState(false)
 
   React.useEffect(() => {
     async function fetchData () {
+      let validValue
       try {
         if (valueId) {
           const { value } = await api.value.get({ id: valueId })
-          setValue(value)
+          validValue = value.value
         } else {
           const { lastValue } = await api.item.getLastValue({ id: itemId })
-          if (validNumberValue(lastValue)) setValue(lastValue)
+          validValue = lastValue
+        }
+        if (!validNumberValue(validValue) && valueType === 'text') {
+          setIsText(true)
+          setValue(validValue)
+        } else {
+          setValue(validNumberValue(validValue) || 10)
         }
         setLoading(false)
       } catch (error) {
         setLoading(false)
+        setError(errorMessageHandler(error))
       }
     }
-
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -74,18 +82,31 @@ const Value = () => {
     }
   }
 
+  const handleValueChange = event => setValue(event.target.value)
+
   return (
     <div className='item-form'>
       <div className='item-form-content'>
         <div className={css.formHeader}>
           <label>{itemTitle}</label>
-          <EditNumber
-            value={value}
-            handleUp={() => setValue(value + 1)}
-            handleDown={() =>
-              value - 1 <= 0 ? setValue(1) : setValue(value - 1)
-            }
-          />
+          {isText ? (
+            <input
+              id='value'
+              className='value-input'
+              type='text'
+              value={value}
+              placeholder={`Naming of the ${itemTitle}`}
+              onChange={handleValueChange}
+            />
+          ) : (
+            <EditNumber
+              value={value}
+              handleUp={() => setValue(value + 1)}
+              handleDown={() =>
+                value - 1 <= 0 ? setValue(1) : setValue(value - 1)
+              }
+            />
+          )}
         </div>
         {loading ? (
           <Loader />

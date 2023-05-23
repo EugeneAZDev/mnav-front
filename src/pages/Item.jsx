@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import Button from '../components/Button/Button'
@@ -20,6 +20,7 @@ const Item = () => {
   const [showDeleteButton, setShowDeleteButton] = useState(false)
   const [title, setTitle] = useState('')
   const [values, setValues] = useState([])
+  const itemRef = useRef()
 
   React.useEffect(() => {
     async function fetchData () {
@@ -27,13 +28,11 @@ const Item = () => {
         const { count } = await api.item.getValuesCount({ id })
         const { item } = await api.item.get({ id })
         const { values } = await api.value.getToday({ id })
-        if (count === 0) {
-          setShowDeleteButton(true)
-          setTitle(item.title)
-          setValues(values)
-        }
-
+        if (count === 0) setShowDeleteButton(true)
+        setTitle(item.title)
+        setValues(values)
         setLoading(false)
+        itemRef.current = item
       } catch (error) {
         setLoading(false)
         setError(errorMessageHandler(error))
@@ -80,14 +79,14 @@ const Item = () => {
                       key={index}
                       className='element element-value'
                       onClick={() =>
-                        navigate(`/values/value/${valueList.id}/${id}/${title}`)
+                        navigate(`/values/value/${id}/${title}/${itemRef.current.valueType}/${valueList.id}`)
                       }
                     >
                       {valueList.value}
                     </button>
                   ))
                 ) : (
-                  <strong className='element element-value'>No values</strong>
+                  <strong className='gray-element element-value'>No values</strong>
                 )}
               </div>
             </div>

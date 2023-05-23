@@ -28,7 +28,7 @@ const ItemEditing = () => {
   const [selectedSection, setSelectedSection] = useState('')
   const [selectedVariation, setSelectedVariation] = useState('Positive')
   const [selectedValueType, setSelectedValueType] = useState('number')
-  const [target, setTarget] = useState('')
+  const [target, setTarget] = useState(undefined)
   const [title, setTitle] = useState('')
   const [error, setError] = useState('')
 
@@ -102,7 +102,6 @@ const ItemEditing = () => {
 
   const handleSaveClick = async () => {
     setError('')
-    console.log(sectionListRef.current)
     const section = sectionListRef.current.filter(
       section => section.title === selectedSection
     )
@@ -120,7 +119,7 @@ const ItemEditing = () => {
     }
 
     if (!title) {
-      setError('"Name of the Item" field is required')
+      setError('Title field is required')
       return
     }
 
@@ -129,6 +128,11 @@ const ItemEditing = () => {
       (!editMode || title !== initialTitle)
     ) {
       setError(`Item already exists`)
+      return
+    }
+
+    if (title.length > 11) {
+      setError('Title exceeds maximum length: 11 characters')
       return
     }
 
@@ -168,7 +172,7 @@ const ItemEditing = () => {
             <input
               id='title'
               type='text'
-              placeholder='Name of the Item'
+              placeholder='Title of the Item'
               value={title}
               onChange={handleTitleChange}
             />

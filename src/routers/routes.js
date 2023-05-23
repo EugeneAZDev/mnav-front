@@ -22,7 +22,7 @@ export const privateRoutes = [
   { path: '/items/:id', element: <Item />},
   { path: '/sections', element: <Sections /> },
   { path: '/today', element: <Today /> },
-  { path: '/values/:itemId/:itemTitle', element: <Value />},
-  { path: '/values/value/:valueId/:itemId/:itemTitle', element: <Value />},
+  { path: '/values/:itemId/:itemTitle/:valueType', element: <Value />},
+  { path: '/values/value/:itemId/:itemTitle/:valueType/:valueId', element: <Value />},
   { path: '*', element: <Menu /> }
 ]

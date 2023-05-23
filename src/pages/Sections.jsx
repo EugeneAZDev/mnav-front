@@ -137,7 +137,7 @@ const Sections = () => {
               />
             ))
           ) : (
-            <strong className='element element-value'>No sections</strong>
+            <strong className='gray-element element-value'>No sections</strong>
           )}
         </div>
         <TwoButtons

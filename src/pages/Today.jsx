@@ -52,12 +52,12 @@ const Today = () => {
                 key={item.title}
                 className='element'
                 onLongPress={() => navigate(`/items/${item.id}`)}
-                onPress={() => navigate(`/values/${item.id}/${item.title}`)}
+                onPress={() => navigate(`/values/${item.id}/${item.title}/${item.valueType}`)}
               >
                 {item.title}
               </Button>
             )) : (
-              <strong className='element element-value'>No items</strong>
+              <strong className='gray-element element-value'>No items</strong>
             )}
           </div>
         )}
