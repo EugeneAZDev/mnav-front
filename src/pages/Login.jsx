@@ -14,7 +14,7 @@ const Login = () => {
 
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [password, setPassword] = useState('')
 
   const api = useContext(ApiContext)
@@ -40,13 +40,13 @@ const Login = () => {
     }
 
     try {
-      setIsLoading(true)
+      setLoading(true)
       const { token } = await api.auth.login({ email, password })
       localStorage.setItem('token', token)
-      setIsLoading(false)
+      setLoading(false)
       setIsAuth(true)
     } catch (error) {
-      setIsLoading(false)
+      setLoading(false)
       setError(errorMessageHandler(error))
     }
   }
@@ -69,7 +69,7 @@ const Login = () => {
           value={password}
           onChange={handlePasswordChange}
         />
-        {isLoading ? (
+        {loading ? (
           <Loader />
         ) : (
           <Button onClick={handleSubmit}>Sign in</Button>

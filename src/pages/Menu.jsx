@@ -22,12 +22,12 @@ const Menu = () => {
   const handlerFunctions = new Map([
     [
       'today',
-      async () => {
+      () => {
         navigate('/today');
       }
     ],
     ['export', () => {
-
+      navigate('/export')
     }],
     ['import', () => {
       
