@@ -48,9 +48,8 @@ const scaffold = url => transport['http'](url)
 
 export default async function getApiMethods () {
   const url = 'http://localhost:8001'
-  const loadMethod = await scaffold(url)({ system: { load: [] } })
-  const loadMethodResponse = await loadMethod.system.load()
-  const structure = loadMethodResponse.clientApi
+  const initial = await scaffold(url)({ system: { load: [] } })
+  const structure = await initial.system.load()
   const allMethods = await scaffold(url)(structure)
   return allMethods
 }
