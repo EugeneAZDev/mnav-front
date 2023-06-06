@@ -28,7 +28,7 @@ const ItemEditing = () => {
   const [selectedSection, setSelectedSection] = useState('')
   const [selectedVariation, setSelectedVariation] = useState('Positive')
   const [selectedValueType, setSelectedValueType] = useState('number')
-  const [target, setTarget] = useState(undefined)
+  const [target, setTarget] = useState('')
   const [title, setTitle] = useState('')
   const [error, setError] = useState('')
 
@@ -54,8 +54,22 @@ const ItemEditing = () => {
         const item = items.find(item => item.id === id)
         if (id && item) {
           setIsEditMode(true)
-          const { title, description, target, sectionId, valueVariation, valueType } = item
-          setInitialItem({ title, description, target, sectionId, valueVariation, valueType })
+          const {
+            title,
+            description,
+            target,
+            sectionId,
+            valueVariation,
+            valueType
+          } = item
+          setInitialItem({
+            title,
+            description,
+            target,
+            sectionId,
+            valueVariation,
+            valueType
+          })
           if (sectionId !== null) {
             const selectedSection = sections.find(
               section => section.id === item.sectionId
@@ -63,13 +77,14 @@ const ItemEditing = () => {
             const sectionTitle = selectedSection.title
             setSelectedSection(sectionTitle)
           }
-          setDescription(description)
-          setTarget(target)
-          setTitle(title)
-          setInitialTitle(title)
-          setInitialValueType(valueType)
-          setSelectedValueType(valueType)
-          setSelectedVariation(valueVariation)
+
+          description && setDescription(description)
+          target && setTarget(target)
+          title && setTitle(title)
+          title && setInitialTitle(title)
+          valueType && setInitialValueType(valueType)
+          valueType && setSelectedValueType(valueType)
+          valueVariation && setSelectedVariation(valueVariation)
         }
         setLoading(false)
       } catch (error) {
@@ -93,7 +108,15 @@ const ItemEditing = () => {
   }
 
   const handleTitleChange = event => setTitle(event.target.value)
-  const handleTargetChange = event => setTarget(event.target.value)
+  const handleTargetChange = event => {
+    if (!isNaN(event.target.value)) {
+      setTarget(event.target.value)
+      setError('')
+    } else {
+      setError('Target must be a number')
+      return
+    }
+  }
   const handleSectionChange = event => setSelectedSection(event.target.value)
   const handleValueTypeChange = event =>
     setSelectedValueType(event.target.value)

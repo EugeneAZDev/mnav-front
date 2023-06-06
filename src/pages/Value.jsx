@@ -32,7 +32,6 @@ const Value = () => {
         }
         if (!validNumberValue(validValue) && valueType === 'text') {
           setIsText(true)
-          setValue(validValue)
         } else {
           setValue(validNumberValue(validValue) || 10)
         }
@@ -94,13 +93,13 @@ const Value = () => {
               id='value'
               className='value-input'
               type='text'
-              value={value}
+              value={value || ''}
               placeholder={`Naming of the ${itemTitle}`}
               onChange={handleValueChange}
             />
           ) : (
             <EditNumber
-              value={value}
+              value={value || ''}
               handleUp={() => setValue(value + 1)}
               handleDown={() =>
                 value - 1 <= 0 ? setValue(1) : setValue(value - 1)

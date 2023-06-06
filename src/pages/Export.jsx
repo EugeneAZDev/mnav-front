@@ -18,7 +18,7 @@ const Export = () => {
     const blob = new Blob([buffer], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     })
-    const filename = 'MyActivities.xlsx'
+    const filename = 'MyActivity.xlsx'
     const url = URL.createObjectURL(blob)
  
     const link = document.createElement('a')
@@ -41,7 +41,7 @@ const Export = () => {
           <Loader />
         ) : (
           <div className='button-container'>
-            <Button onClick={handleDownload}>Download</Button>
+            <Button onClick={handleDownload}>Save</Button>
             <Button onClick={() => navigate('/menu')}>
               Back
             </Button>

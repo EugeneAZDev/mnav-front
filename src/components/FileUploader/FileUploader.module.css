@@ -1,0 +1,36 @@
+.input {
+  margin-left: 25px;
+  color: transparent;
+}
+
+.fileInput {
+  position: relative;
+  display: inline-block;
+}
+
+.chooseButton {
+  width: 100%;
+  padding: 8px 0px;
+  border-radius: 4px;
+  background-color: #00703c;
+  color: #fff;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  min-width: 200px;
+}
+
+.chooseButton:hover {
+  background-color: #00562b;
+}
+
+.nativeInput {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  width: 100%;
+  height: 50%;
+  cursor: pointer;
+}

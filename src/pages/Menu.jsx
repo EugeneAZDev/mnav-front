@@ -30,7 +30,7 @@ const Menu = () => {
       navigate('/export')
     }],
     ['import', () => {
-      
+      navigate('/import')
     }],
     [
       'logout',

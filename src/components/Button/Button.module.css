@@ -12,7 +12,8 @@
 }
 
 .button:hover {
-  background-color: #00562b;
+  background-color: #18c615bd;
+  font-weight: bold;
 }
 
 .button-narrow {

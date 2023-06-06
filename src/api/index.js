@@ -15,14 +15,23 @@ transport.http = url => structure => {
     const service = structure[name]
     const methods = Object.keys(service)
     for (const method of methods) {
-      api[name][method] = ({ ...args } = {}) => {
+      api[name][method] = ({ file, ...args } = {}) => {
+        let body;
         const token = localStorage.getItem('token')
         if (token) HEADERS['Authorization'] = `Bearer ${token}`
+        if (file) {
+          const formData = new FormData();
+          formData.append('file', file);
+          body = formData;
+        } else {
+          body = JSON.stringify({ args })
+        }
+
         return new Promise((resolve, reject) => {
           fetch(`${url}/api/${name}/${method}`, {
             method: 'POST',
             headers: HEADERS,
-            body: JSON.stringify({ args })
+            body
           }).then(res => {
             const headers = res.headers
             const statusType = Math.floor(res.status / 10)

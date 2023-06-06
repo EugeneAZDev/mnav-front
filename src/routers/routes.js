@@ -1,5 +1,6 @@
 import Export from '../pages/Export'
 import Home from '../pages/Home'
+import Import from '../pages/Import'
 import ItemEditing from '../pages/ItemEditing'
 import Item from '../pages/Item'
 import Login from '../pages/Login'
@@ -21,6 +22,7 @@ export const privateRoutes = [
   { path: '/edit-item', element: <ItemEditing /> },
   { path: '/edit-item/:id', element: <ItemEditing /> },
   { path: '/export', element: <Export /> },
+  { path: '/import', element: <Import /> },
   { path: '/items/:id', element: <Item />},
   { path: '/sections', element: <Sections /> },
   { path: '/today', element: <Today /> },
