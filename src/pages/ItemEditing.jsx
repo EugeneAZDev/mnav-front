@@ -20,11 +20,13 @@ const ItemEditing = () => {
 
   const [description, setDescription] = useState('')
   const [editMode, setIsEditMode] = useState(false)
+  const [disabledTarget, setDisabledTarget] = useState(false)
   const [initialItem, setInitialItem] = useState({})
   const [initialTitle, setInitialTitle] = useState('')
   const [initialValueType, setInitialValueType] = useState('')
   const [loading, setLoading] = useState(true)
   const [sections, setSections] = useState([])
+  const [sectionTitles, setSectionTitles] = useState([])
   const [selectedSection, setSelectedSection] = useState('')
   const [selectedVariation, setSelectedVariation] = useState('Positive')
   const [selectedValueType, setSelectedValueType] = useState('number')
@@ -38,6 +40,14 @@ const ItemEditing = () => {
   const sectionListRef = useRef()
   const typeListRef = useRef()
 
+  const setStateOfTheTargetField = value => {
+    if (value === 'text') {
+      setDisabledTarget(true)
+    } else {
+      setDisabledTarget(false)
+    }
+  }
+
   React.useEffect(() => {
     async function fetchData () {
       try {
@@ -49,7 +59,8 @@ const ItemEditing = () => {
           ? sections.map(data => data.title)
           : ['None']
         sectionListRef.current = sectionTitles
-        setSections(sectionTitles)
+        setSectionTitles(sectionTitles)
+        setSections(sections)
         existedItemsRef.current = items.map(item => item.title)
         const item = items.find(item => item.id === id)
         if (id && item) {
@@ -85,6 +96,8 @@ const ItemEditing = () => {
           valueType && setInitialValueType(valueType)
           valueType && setSelectedValueType(valueType)
           valueVariation && setSelectedVariation(valueVariation)
+
+          setStateOfTheTargetField(valueType)
         }
         setLoading(false)
       } catch (error) {
@@ -118,17 +131,23 @@ const ItemEditing = () => {
     }
   }
   const handleSectionChange = event => setSelectedSection(event.target.value)
-  const handleValueTypeChange = event =>
-    setSelectedValueType(event.target.value)
+  const handleValueTypeChange = event => {
+    const value = event.target.value
+    setStateOfTheTargetField(value)
+    setSelectedValueType(value)
+  }
+
   const handleVariationChange = event =>
     setSelectedVariation(event.target.value)
 
   const handleSaveClick = async () => {
     setError('')
-    const section = sectionListRef.current.filter(
-      section => section.title === selectedSection
+    const sectionTitle = sectionListRef.current.find(
+      item => item === selectedSection
     )
-    const sectionId = section && section[0]?.id
+    const section =
+      sectionTitle && sections.find(section => section.title === sectionTitle)
+    const sectionId = section.id
     const valueVariation = Boolean(selectedVariation)
     const valueType = selectedValueType
 
@@ -207,6 +226,7 @@ const ItemEditing = () => {
               onChange={handleDescriptionChange}
             />
             <input
+              disabled={disabledTarget}
               id='target'
               type='text'
               placeholder='Target value'
@@ -215,7 +235,7 @@ const ItemEditing = () => {
             />
             <ComboBox
               title='Sections'
-              options={loading ? [] : sections}
+              options={loading ? [] : sectionTitles}
               value={selectedSection}
               handleComboBoxChange={handleSectionChange}
               handleEditClick={handleEditSectionsClick}

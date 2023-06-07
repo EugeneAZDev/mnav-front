@@ -22,16 +22,19 @@ const Value = () => {
   React.useEffect(() => {
     async function fetchData () {
       let validValue
+      let textValue
       try {
         if (valueId) {
           const { value } = await api.value.get({ id: valueId })
           validValue = value.value
+          textValue = validValue
         } else {
           const { lastValue } = await api.item.getLastValue({ id: itemId })
           validValue = lastValue
         }
         if (!validNumberValue(validValue) && valueType === 'text') {
           setIsText(true)
+          setValue(textValue)
         } else {
           setValue(validNumberValue(validValue) || 10)
         }
