@@ -10,7 +10,7 @@ import '../styles/Menu.css'
 
 const buttons = [
   { id: 'today',  label: 'TODAY' },
-  { id: 'export', label: 'EXPORT' },
+  // { id: 'export', label: 'EXPORT' },
   { id: 'import', label: 'IMPORT' },
   { id: 'logout', label: 'LOG OUT' }
 ]

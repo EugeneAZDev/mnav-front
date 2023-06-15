@@ -147,7 +147,7 @@ const ItemEditing = () => {
     )
     const section =
       sectionTitle && sections.find(section => section.title === sectionTitle)
-    const sectionId = section.id
+    const sectionId = section && section.id
     const valueVariation = Boolean(selectedVariation)
     const valueType = selectedValueType
 
