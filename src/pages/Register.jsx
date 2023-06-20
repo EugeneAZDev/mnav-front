@@ -31,7 +31,7 @@ const Register = () => {
           setError('This email is already in use')
         } else {
           const user = await api.user.create({ email })
-          const url = `localhost:3000/reset/${user.userId}`
+          const url = `${process.env.REACT_APP_HOST}/reset/${user.userId}`
           console.log(url)
           // TODO Implement functions below:
           // 3. Send email

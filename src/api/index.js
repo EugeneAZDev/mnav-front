@@ -56,7 +56,7 @@ transport.http = url => structure => {
 const scaffold = url => transport['http'](url)
 
 export default async function getApiMethods () {
-  const url = 'http://localhost:8001'
+  const url = process.env.REACT_APP_API_HOST
   const initial = await scaffold(url)({ system: { load: [] } })
   const structure = await initial.system.load()
   const allMethods = await scaffold(url)(structure)

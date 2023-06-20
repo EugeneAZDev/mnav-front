@@ -25,7 +25,7 @@ const Import = () => {
       setLoading(true)
       const file = event.target.files[0]
       fileInputRef.current.value = ''
-      const result = await api.exchange.import({ file })
+      const result = await api.exchange.upload({ file })
       setLoading(false)
       setSuccess(result.message)
     } catch (error) {

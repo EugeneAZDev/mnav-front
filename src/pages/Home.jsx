@@ -5,6 +5,7 @@ import Button from '../components/Button/Button'
 import Title from '../components/Title/Title'
 
 import '../styles/Home.css'
+import '../styles/Common.css' // Temporary for alpha version text
 
 const Home = () => {
   const navigate = useNavigate()
@@ -26,7 +27,11 @@ const Home = () => {
           }}
         >
           SIGN IN
-        </Button>
+        </Button>        
+      </div>
+      <br/>
+      <div>
+          <label className='error'>Experimental version</label>
       </div>
     </div>
   )

@@ -10,7 +10,7 @@ import '../styles/Menu.css'
 
 const buttons = [
   { id: 'today',  label: 'TODAY' },
-  // { id: 'export', label: 'EXPORT' },
+  { id: 'export', label: 'EXPORT' },
   { id: 'import', label: 'IMPORT' },
   { id: 'logout', label: 'LOG OUT' }
 ]
@@ -47,6 +47,9 @@ const Menu = () => {
 
   return (
     <div className='menu-container'>
+      <div>
+          <label className='error'>EXPERIMENTAL VERSION!</label>
+      </div>
       <div className='menu-label'>MENU</div>
       <div className='menu-buttons'>
         {buttons.map(button => (
@@ -54,7 +57,7 @@ const Menu = () => {
             {button.label}
           </Button>
         ))}
-      </div>
+      </div>    
     </div>
   )
 }
