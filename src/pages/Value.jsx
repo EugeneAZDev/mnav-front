@@ -3,17 +3,16 @@ import { useNavigate, useParams } from 'react-router-dom'
 import EditNumber from '../components/EditNumber/EditNumber'
 import Loader from '../components/Loader/Loader'
 import TwoButtons from '../components/TwoButtons/TwoButtons'
-import ApiContext from '../context/api.js'
 import '../styles/Common.css'
 import css from '../styles/Item.css'
 import validNumberValue from '../utils/validNumberValue.js'
 import errorMessageHandler from '../utils/errorMessageHandler.js'
+import { fetchApiMethods } from '../api/getMethods.js'
 
 const Value = () => {
   const navigate = useNavigate()
   const { itemId, itemTitle, valueType, valueId } = useParams()
-  const api = React.useContext(ApiContext)
-
+  const [api, setApi] = useState({})
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
   const [value, setValue] = useState('')
@@ -21,6 +20,8 @@ const Value = () => {
 
   React.useEffect(() => {
     async function fetchData () {
+      const api = await fetchApiMethods()
+      setApi(api)
       let validValue
       let textValue
       try {

@@ -1,31 +1,28 @@
 import React, { useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/auth'
-import Button from '../components/Button/Button'
+import TwoButtons from '../components/TwoButtons/TwoButtons'
 import Loader from '../components/Loader/Loader'
 import Title from '../components/Title/Title'
-import ApiContext from '../context/api.js'
 import isValidEmail from '../utils/validateEmail.js'
 import errorMessageHandler from '../utils/errorMessageHandler.js'
 import '../styles/Common.css'
+import { fetchApiMethods } from '../api/getMethods'
 
 const Login = () => {
+  const navigate = useNavigate()
   // eslint-disable-next-line no-unused-vars
   const { isAuth, setIsAuth } = useContext(AuthContext)
-
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [password, setPassword] = useState('')
-
-  const api = useContext(ApiContext)
-
   const handleEmailChange = event => {
     setEmail(event.target.value)
   }
   const handlePasswordChange = event => {
     setPassword(event.target.value)
   }
-
   const handleSubmit = async event => {
     event.preventDefault()
     setError('')
@@ -41,6 +38,7 @@ const Login = () => {
 
     try {
       setLoading(true)
+      const api = await fetchApiMethods()
       const { token } = await api.auth.login({ email, password })
       localStorage.setItem('token', token)
       setLoading(false)
@@ -72,7 +70,12 @@ const Login = () => {
         {loading ? (
           <Loader />
         ) : (
-          <Button onClick={handleSubmit}>Sign in</Button>
+          <TwoButtons
+            leftTitle='Back'
+            handleLeftClick={() => navigate('/menu')}
+            rightTitle='Sign in'
+            handleRightClick={handleSubmit}
+          />
         )}
         {error && <div className='error'>{error}</div>}
       </div>

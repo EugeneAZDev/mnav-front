@@ -4,3 +4,7 @@
   margin-top: 16px;
   font-weight: bold;
 }
+
+.register-form-content {
+  max-width: 200px;
+}

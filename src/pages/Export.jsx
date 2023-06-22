@@ -3,18 +3,18 @@ import { useNavigate } from 'react-router-dom'
 import Button from '../components/Button/Button'
 import Loader from '../components/Loader/Loader'
 import Title from '../components/Title/Title'
-import ApiContext from '../context/api.js'
+import { fetchApiMethods } from '../api/getMethods'
 import '../styles/Common.css'
 import '../styles/Exchange.css'
 
 const Export = () => {
   const navigate = useNavigate()
-  const api = React.useContext(ApiContext)
   const [loading, setLoading] = React.useState(false)
   
   const handleDownload = async () => {
     setLoading(true)
-    const buffer = await api.exchange.export()    
+    const api = await fetchApiMethods()
+    const buffer = await api.exchange.download()    
     const blob = new Blob([buffer], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     })
@@ -42,7 +42,7 @@ const Export = () => {
         ) : (
           <div className='button-container'>
             <Button onClick={handleDownload}>Save</Button>
-            <Button onClick={() => navigate('/menu')}>
+            <Button narrow onClick={() => navigate('/home')}>
               Back
             </Button>
           </div>

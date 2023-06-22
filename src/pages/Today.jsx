@@ -4,13 +4,12 @@ import Button from '../components/Button/Button'
 import Loader from '../components/Loader/Loader'
 import Title from '../components/Title/Title'
 import TwoButtons from '../components/TwoButtons/TwoButtons'
-import ApiContext from '../context/api.js'
+import { fetchApiMethods } from '../api/getMethods'
 import '../styles/Common.css'
 import errorMessageHandler from '../utils/errorMessageHandler.js'
 
 const Today = () => {
   const navigate = useNavigate()
-  const api = React.useContext(ApiContext)
   const [error, setError] = useState('')
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
@@ -19,7 +18,11 @@ const Today = () => {
 
   async function fetchItems () {
     try {
+      const api = await fetchApiMethods();
       const { items } = await api.item.findByUser()
+      // const { values } = await api.values.getToday()
+      console.log(items)
+      // console.log(values);
       setLoading(false)
       return items
     } catch (error) {
@@ -38,6 +41,10 @@ const Today = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <div className='item-form'>
       <div className='item-form-content'>
@@ -54,7 +61,11 @@ const Today = () => {
                 onLongPress={() => navigate(`/items/${item.id}`)}
                 onPress={() => navigate(`/values/${item.id}/${item.title}/${item.valueType}`)}
               >
-                {item.title}
+                <div>
+                  <span>{item.title}</span>
+                  <span style={{ fontWeight: 'bold' }}>1</span>
+                  <span>of {item.target}</span>
+                </div>                
               </Button>
             )) : (
               <strong className='gray-element element-value'>No items</strong>

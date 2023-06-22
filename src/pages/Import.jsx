@@ -5,24 +5,23 @@ import errorMessageHandler from '../utils/errorMessageHandler.js'
 import FileUploader from '../components/FileUploader/FileUploader'
 import Loader from '../components/Loader/Loader'
 import Title from '../components/Title/Title'
-import ApiContext from '../context/api.js'
 import '../styles/Common.css'
 import '../styles/Exchange.css'
+import { fetchApiMethods } from '../api/getMethods'
 
 const Import = () => {
   const navigate = useNavigate()
-  const api = React.useContext(ApiContext)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
   const fileInputRef = React.createRef('')
   
-
   const handleUpload = async event => {
     try {
       setError('')
       setSuccess('')
       setLoading(true)
+      const api = await fetchApiMethods()
       const file = event.target.files[0]
       fileInputRef.current.value = ''
       const result = await api.exchange.upload({ file })

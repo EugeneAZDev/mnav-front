@@ -1,19 +1,18 @@
 import React, { useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-
 import Button from '../components/Button/Button'
 import Loader from '../components/Loader/Loader'
-import ApiContext from '../context/api.js'
 import '../styles/Common.css'
 import css from '../styles/Item.css'
 import editIcon from '../images/edit.png'
 import errorMessageHandler from '../utils/errorMessageHandler'
+import { fetchApiMethods } from '../api/getMethods'
 
 const Item = () => {
   const navigate = useNavigate()
   const { id } = useParams()
-  const api = React.useContext(ApiContext)
 
+  const [api, setApi] = useState({})
   const [error, setError] = useState('')
   const [deletedMsg, setDeletedMsg] = useState('')
   const [loading, setLoading] = useState(true)
@@ -25,9 +24,11 @@ const Item = () => {
   React.useEffect(() => {
     async function fetchData () {
       try {
+        const api = await fetchApiMethods();
+        setApi(api);
         const { count } = await api.item.getValuesCount({ id })
         const { item } = await api.item.get({ id })
-        const { values } = await api.value.getToday({ id })
+        const { values } = await api.value.getTodayByItem({ id })
         if (count === 0) setShowDeleteButton(true)
         setTitle(item.title)
         setValues(values)

@@ -1,28 +1,23 @@
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Button from '../components/Button/Button'
 import Title from '../components/Title/Title'
-import ApiContext from '../context/api.js'
 import '../styles/Common.css'
 import errorMessageHandler from '../utils/errorMessageHandler'
+import { fetchApiMethods } from '../api/getMethods.js'
 
 const Reset = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const api = useContext(ApiContext)
-
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
-  
   const handleConfirmPasswordChange = event => {
     setConfirmPassword(event.target.value)
   }
-
   const handlePasswordChange = event => {
     setPassword(event.target.value)
   }
-
   const handleSubmit = async (event) => {
     event.preventDefault()
 
@@ -36,6 +31,7 @@ const Reset = () => {
     }
 
     try {
+      const api = await fetchApiMethods()
       await api.auth.register({ id, password })
       navigate(`/login`)
     } catch (error) {

@@ -1,19 +1,19 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Button from '../components/Button/Button.jsx'
 import Title from '../components/Title/Title.jsx'
-import ApiContext from '../context/api.js'
+import TwoButtons from '../components/TwoButtons/TwoButtons.jsx'
 import '../styles/Common.css'
 import '../styles/Register.css'
 import isValidEmail from '../utils/validateEmail.js'
 import errorMessageHandler from '../utils/errorMessageHandler.js'
+import { fetchApiMethods } from '../api/getMethods.js'
 
 const Register = () => {
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [isDone, setIsDone] = useState(false)
   const [error, setError] = useState('')
-
-  const api = useContext(ApiContext)
-
   const handleEmailChange = event => {
     setEmail(event.target.value)
   }
@@ -26,15 +26,14 @@ const Register = () => {
     }
     if (isValidEmail(email)) {
       try {
-        const { user } = await api.user.find({ email })
-        if (user) {
+        const api = await fetchApiMethods()
+        let { user } = await api.user.find({ email })
+        if (user && user.password !== null) {
           setError('This email is already in use')
         } else {
-          const user = await api.user.create({ email })
-          const url = `${process.env.REACT_APP_HOST}/reset/${user.userId}`
-          console.log(url)
-          // TODO Implement functions below:
-          // 3. Send email
+          if (!user) user = await api.user.create({ email })
+          const url = `${process.env.REACT_APP_HOST}/reset/${user.id}`
+          await api.user.sendEmail({ email, url })
           setIsDone(true)
         }
       } catch (error) {
@@ -52,9 +51,14 @@ const Register = () => {
       <div className='form-content'>
         <Title text='Create Your Profile' />
         {isDone ? (
-          <p className='registration-form-success'>
-            Please check your inbox for complete registration
-          </p>
+          <>
+            <p className='registration-form-success'>
+              Please check your inbox for complete registration
+            </p>
+            <div className='register-form-content'>
+              <Button onClick={() => navigate('/menu')}>Home</Button>
+            </div>
+          </>
         ) : (
           <>
             <input
@@ -63,12 +67,13 @@ const Register = () => {
               value={email}
               onChange={handleEmailChange}
             />
-            <Button onClick={handleDoneClick}>Done</Button>
-            {error && (
-              <p className='error'>
-                {error}
-              </p>
-            )}
+            <TwoButtons
+              leftTitle='Back'
+              handleLeftClick={() => navigate('menu')}
+              rightTitle='Done'
+              handleRightClick={handleDoneClick}
+            />
+            {error && <p className='error'>{error}</p>}
           </>
         )}
       </div>

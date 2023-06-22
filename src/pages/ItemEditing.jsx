@@ -1,23 +1,19 @@
 import React, { useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-
-import ApiContext from '../context/api.js'
-
 import Loader from '../components/Loader/Loader'
 import Title from '../components/Title/Title'
 import ComboBox from '../components/ComboBox/ComboBox'
 import DoubleComboBox from '../components/DoubleComboBox/DoubleComboBox'
 import TwoButtons from '../components/TwoButtons/TwoButtons.jsx'
-
 import '../styles/Common.css'
 import equalPlainObjects from '../utils/equalPlainObjects.js'
 import errorMessageHandler from '../utils/errorMessageHandler.js'
+import { fetchApiMethods } from '../api/getMethods'
 
 const ItemEditing = () => {
   const navigate = useNavigate()
   const { id } = useParams()
-  const api = React.useContext(ApiContext)
-
+  const [api, setApi] = useState({})
   const [description, setDescription] = useState('')
   const [editMode, setIsEditMode] = useState(false)
   const [disabledTarget, setDisabledTarget] = useState(false)
@@ -33,13 +29,10 @@ const ItemEditing = () => {
   const [target, setTarget] = useState('')
   const [title, setTitle] = useState('')
   const [error, setError] = useState('')
-
   const variations = ['Positive', 'Negative']
-
   const existedItemsRef = useRef()
   const sectionListRef = useRef()
   const typeListRef = useRef()
-
   const setStateOfTheTargetField = value => {
     if (value === 'text') {
       setDisabledTarget(true)
@@ -51,6 +44,8 @@ const ItemEditing = () => {
   React.useEffect(() => {
     async function fetchData () {
       try {
+        const api = await fetchApiMethods()
+        setApi(api)
         const { items } = await api.item.findByUser()
         const { types } = await api.item.getValueType()
         typeListRef.current = types

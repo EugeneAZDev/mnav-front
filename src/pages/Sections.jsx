@@ -3,24 +3,24 @@ import { useNavigate } from 'react-router-dom'
 import InputAndDelete from '../components/InputAndDelete/InputAndDelete.jsx'
 import Title from '../components/Title/Title.jsx'
 import TwoButtons from '../components/TwoButtons/TwoButtons.jsx'
-import ApiContext from '../context/api.js'
 import '../styles/Common.css'
 import getKeyByValue from '../utils/getKeyMap.js'
 import errorMessageHandler from '../utils/errorMessageHandler.js'
+import { fetchApiMethods } from '../api/getMethods.js'
 
 const Sections = () => {
-  const api = React.useContext(ApiContext)
   const navigate = useNavigate()
   const defaultLabel = 'New section'
-
+  const [api, setApi] = useState({})
   const [error, setError] = useState('')
   const [sections, setSections] = useState([])
   const [sectionTitlesToAdd, setSectionTitlesToAdd] = useState([])
-
   const idTitleMapRef = React.useRef()
 
   React.useEffect(() => {
     async function fetchData () {
+      const api = await fetchApiMethods()
+      setApi(api)
       const { sections } = await api.section.findByUser()
       setSections(sections.map(data => data.title))
       const map = new Map()
