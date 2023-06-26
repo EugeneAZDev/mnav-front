@@ -28,7 +28,7 @@ const Item = () => {
         setApi(api);
         const { count } = await api.item.getValuesCount({ id })
         const { item } = await api.item.get({ id })
-        const { values } = await api.value.getTodayByItem({ id })
+        const { values } = await api.value.getToday({ id })
         if (count === 0) setShowDeleteButton(true)
         setTitle(item.title)
         setValues(values)

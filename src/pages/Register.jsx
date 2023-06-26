@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import Button from '../components/Button/Button.jsx'
 import Title from '../components/Title/Title.jsx'
 import TwoButtons from '../components/TwoButtons/TwoButtons.jsx'
-import '../styles/Common.css'
-import '../styles/Register.css'
 import isValidEmail from '../utils/validateEmail.js'
 import errorMessageHandler from '../utils/errorMessageHandler.js'
 import { fetchApiMethods } from '../api/getMethods.js'
+import '../styles/Common.css'
+import '../styles/Register.css'
 
 const Register = () => {
   const navigate = useNavigate()

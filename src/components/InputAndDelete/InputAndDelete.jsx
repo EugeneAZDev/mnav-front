@@ -10,6 +10,7 @@ const InputAndDelete = ({
   onClick,
   onDelete,
 }) => {
+  // eslint-disable-next-line no-unused-vars
   const [value, setValue] = useState('')
 
   const handleInputChange = event => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import editIcon from '../../images/edit.png'
+import Edit from '../Edit/Edit'
 import css from './ComboBox.module.css'
 
 const ComboBox = ({
@@ -27,12 +27,7 @@ const ComboBox = ({
           </option>
         ))}
       </select>
-      <img
-        className={css.image}
-        src={editIcon}
-        alt='Edit'
-        onClick={handleEditClick}
-      />
+      <Edit onClick={handleEditClick} />
     </div>
   )
 }

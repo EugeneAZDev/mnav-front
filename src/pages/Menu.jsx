@@ -46,10 +46,7 @@ const Menu = () => {
   }
 
   return (
-    <div className='menu-container'>
-      <div>
-          <label className='error'>EXPERIMENTAL VERSION!</label>
-      </div>
+    <div className='menu-container'>      
       <div className='menu-label'>MENU</div>
       <div className='menu-buttons'>
         {buttons.map(button => (
@@ -57,7 +54,10 @@ const Menu = () => {
             {button.label}
           </Button>
         ))}
-      </div>    
+      </div>
+      <div>
+          <label className='error'>Experimental version: 1.0.0</label>
+      </div>
     </div>
   )
 }

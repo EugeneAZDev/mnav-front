@@ -18,17 +18,28 @@ const Today = () => {
 
   async function fetchItems () {
     try {
-      const api = await fetchApiMethods();
+      const api = await fetchApiMethods()
       const { items } = await api.item.findByUser()
-      // const { values } = await api.values.getToday()
-      console.log(items)
-      // console.log(values);
+      const { values } = await api.value.getToday()
+
+      items.map(item => {
+        if (item.valueType === 'text') {
+          item.value = -1
+          return item
+        }
+        const totalValue = values
+          .filter(v => v.itemId === item.id)
+          .map(v => parseInt(v.value))
+          .reduce((total, value) => total + value, 0)
+        item.value = totalValue
+        return item
+      })
       setLoading(false)
       return items
     } catch (error) {
       setLoading(false)
-      setError(errorMessageHandler(error))    
-      return [];
+      setError(errorMessageHandler(error))
+      return []
     }
   }
 
@@ -42,7 +53,7 @@ const Today = () => {
   }, [])
 
   if (loading) {
-    return <Loader />;
+    return <Loader />
   }
 
   return (
@@ -53,21 +64,54 @@ const Today = () => {
           <Loader />
         ) : (
           <div className='scroll'>
-            {items.length ? items.map(item => (
-              <Button
-                activeLongPress={true}
-                key={item.title}
-                className='element'
-                onLongPress={() => navigate(`/items/${item.id}`)}
-                onPress={() => navigate(`/values/${item.id}/${item.title}/${item.valueType}`)}
-              >
-                <div>
-                  <span>{item.title}</span>
-                  <span style={{ fontWeight: 'bold' }}>1</span>
-                  <span>of {item.target}</span>
-                </div>                
-              </Button>
-            )) : (
+            {items.length ? (
+              items.map(item => (
+                <Button
+                  activeLongPress={true}
+                  key={item.title}
+                  className='element'
+                  onLongPress={() => navigate(`/items/${item.id}`)}
+                  onPress={() =>
+                    navigate(
+                      `/values/${item.id}/${item.title}/${item.valueType}`
+                    )
+                  }
+                >
+                  <div>
+                    <span>{item.title}</span>
+                    {item.value > 0 ? (
+                      <>
+                        <span
+                          style={{
+                            paddingLeft: '15px',
+                            fontWeight: 'bold'
+                          }}
+                        >
+                          {item.value}
+                        </span>
+                      </>
+                    ) : item.value === -1 ? (
+                      <></>
+                    ) : (
+                      <span style={{ paddingLeft: '4px' }}>0</span>
+                    )}
+                    {item.target && item.target !== 0 ? (
+                      <>
+                        <span
+                          style={{
+                            paddingLeft: '4px'
+                          }}
+                        >
+                          of {item.target}
+                        </span>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                </Button>
+              ))
+            ) : (
               <strong className='gray-element element-value'>No items</strong>
             )}
           </div>

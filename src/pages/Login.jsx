@@ -78,6 +78,7 @@ const Login = () => {
           />
         )}
         {error && <div className='error'>{error}</div>}
+        <label className='error'>Experimental version: 1.0.0</label>
       </div>
     </div>
   )

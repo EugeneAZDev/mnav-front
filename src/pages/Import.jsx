@@ -23,7 +23,7 @@ const Import = () => {
       setLoading(true)
       const api = await fetchApiMethods()
       const file = event.target.files[0]
-      fileInputRef.current.value = ''
+      fileInputRef.current = ''
       const result = await api.exchange.upload({ file })
       setLoading(false)
       setSuccess(result.message)
