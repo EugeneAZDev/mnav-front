@@ -1,7 +1,3 @@
-# My Activity Navigator
-- #### Alpha Private Test Preview [http version draft mode] => http://mnav.dgold.space/
-
-
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
