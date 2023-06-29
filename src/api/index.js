@@ -28,7 +28,7 @@ transport.http = url => structure => {
         }
 
         return new Promise((resolve, reject) => {
-          fetch(`${url}/api/${name}/${method}`, {
+          fetch(`${url}/${name}/${method}`, {
             method: 'POST',
             headers: HEADERS,
             body
